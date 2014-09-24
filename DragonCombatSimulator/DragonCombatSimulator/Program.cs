@@ -136,5 +136,39 @@ namespace DragonCombatSimulator
                 Console.WriteLine("You have attempted: " + numAttacks + " attacks on the dragon");
             }
         }
+
+         }
+        static void AddHighScore(int playerscore)
+        {
+            Console.WriteLine("What is your name?");
+            string name = Console.ReadLine();
+
+            ForrestEntities db = new ForrestEntities();
+
+            HighScore newHighScore = new HighScore();
+            newHighScore.Name = playername;
+            newHighScore.Date = DateTime.Now;
+            newHighScore.Game = "Dragon Combat";
+            newHighScore.Score = playerscore;
+
+            db.HighScores.Add(newHighScore);
+
+            db.Save();
+        }
+        static void DisplayHighScore()
+    {
+            Console.WriteLine("High Scores");
+            Console.WriteLine("---------------------------------");
+            Console.WriteLine();
+
+            ForrestEntities db = new ForrestEntities();
+            List<HighScore> HighScoreList = db.HighScores.Where(x => x.Game == "DragonCombat").OrderBy(x => x.Score).Take(10).ToList();
+
+            foreach (HighScore highscore in HighScoreList)
+	{
+		    Console.WriteLine("{0}, {1} Took {2} tries to win! {3}", HighScoreList.IndexOf(highscore) + 1, highscore.Score, highscore.Date.Value.ToShortDateString());
+	}
+    }
+}
     }
 }
